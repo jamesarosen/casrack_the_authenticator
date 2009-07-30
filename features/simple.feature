@@ -7,14 +7,12 @@ Feature: Simple CAS Authentication
     And the simple version of Casrack the Authenticator is installed
   
   Scenario: not-signed-in user accesses public material
-    Given the user has not authenticated with CAS
-    And the underlying Rack application returns [200, {}, "Public Information"]
+    Given the underlying Rack application returns [200, {}, "Public Information"]
     When I make a request
     Then the response should be successful
     And the response body should include "Public Information"
     
   Scenario: not-signed-in user accesses restricted material
-    Given the user has not authenticated with CAS
-    And the underlying Rack application returns [401, {}, "Restricted!"]
+    Given the underlying Rack application returns [401, {}, "Restricted!"]
     When I make a request
     Then I should be redirected to CAS
