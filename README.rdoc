@@ -1,0 +1,48 @@
+Casrack the Authenticator is a
+Rack[http://github.com/chneukirchen/rack] middleware
+that provides CAS[http://www.jasig.org/cas] support.
+
+As of the current version, Casrack the Authenticator only supports the most basic
+of CAS scenarios: it requires CAS authentication if it receives a 401 Unauthorized
+response from lower-down in the Rack stack, and it stores the authentication token
+in the session (so logout happens when users close their browers).  Casrack the Authenticator
+is a very open-minded beast, though, so please contribute (well-tested) additions to do
+proxy-authentication and single-sign-out, or for anything else you desire.
+
+=== How-To
+
+1. [sudo] gem install casrack_the_authenticator
+
+1. set up the middleware:
+
+  # in your rackup:
+  use CasrackTheAuthenticator::Basic, :cas_server => "http://cas.mycompany.com/cas"
+  # or "config.middleware.use" if you're on Rails
+
+1. optionally install CasrackTheAuthenticator::RequireCAS if you
+   want _every_ request to require CAS authentication:
+   
+  # in your rackup:
+  use CasrackTheAuthenticator::Basic, :cas_server => ...
+  use CasrackTheAuthenticator::RequireCAS
+  # or "config.middleware.use" if you're on Rails
+   
+1. pull the authenticated CAS username out of the Rack session:
+
+  # in a Rack app:
+  def call(env)
+    user = cas_user(env)
+    ...
+  end
+  
+  def cas_user(env)
+    username = Rack::Request.new(env).session[CasrackTheAuthenticator::USERNAME_PARAM]
+    User.find_by_username(username)
+  end
+  
+  # or, in a Rails controller:
+  
+  def cas_user
+    username = Rack::Request.new(request.env).session[CasrackTheAuthenticator::USERNAME_PARAM]
+    User.find_by_username(username)
+  end
