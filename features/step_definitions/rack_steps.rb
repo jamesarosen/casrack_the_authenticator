@@ -7,7 +7,11 @@ Given /^a Rack application exists$/ do
 end
 
 Given /^the simple version of Casrack the Authenticator is installed$/ do
-  self.app = CasrackTheAuthenticator::Simple.new(underlying_app, :cas_server => 'http://cas.test/cas')
+  self.app = CasrackTheAuthenticator::Simple.new(app, :cas_server => 'http://cas.test/cas')
+end
+
+Given /^the RequireCAS middleware is installed$/ do
+  self.app = CasrackTheAuthenticator::RequireCAS.new(app)
 end
 
 Given /^the underlying Rack application returns (.+)$/ do |response|
@@ -51,7 +55,7 @@ Then /^the response body should include "([^\"]*)"$/ do |text|
 end
 
 Then /^I should be redirected to CAS$/ do
-  assert((300..399).include?(response.status))
+  assert((300..399).include?(response.status), "Expected redirect, but was #{response.status}")
   assert !redirected_to.nil?
   assert redirected_to.to_s =~ /cas/i
 end
