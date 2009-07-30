@@ -10,6 +10,17 @@ module CasrackTheAuthenticator
     
     DEFAULT_SERVICE_VALIDATE_URL = "%s/serviceValidate"
     
+    # Options:
+    # 
+    # [<tt>:cas_server</tt>] the CAS server root URL; probably something like
+    #                        'http://cas.mycompany.com' or 
+    #                        'http://cas.mycompany.com/cas'; optional
+    # [<tt>:cas_login_url</tt>] the URL to which to redirect to for logins; 
+    #                           optional if <tt>:cas_server</tt> is specified,
+    #                           otherwise requred.
+    # [<tt>:cas_service_validate_url</tt>] the URL to use for validating service tickets; 
+    #                                      optional if <tt>:cas_server</tt> is specified,
+    #                                      otherwise requred.
     def initialize(params)
       parse_params params
     end
