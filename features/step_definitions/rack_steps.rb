@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'test', 'test_helper.rb')
+require 'rack/mock'
 
 Given /^a Rack application exists$/ do
   @underlying_app = lambda { |env| nil }
@@ -14,20 +15,20 @@ Given /^the underlying Rack application returns (.+)$/ do |response|
 end
 
 When /^I make a request$/ do
-  @response = @app.call({})
+  @response = Rack::MockRequest.new(@app).get '/'
 end
 
 Then /^the response should be successful$/ do
-  assert((200..299).include?(@response[0]))
+  assert((200..299).include?(@response.status))
 end
 
 Then /^the response body should include "([^\"]*)"$/ do |text|
-  assert @response[2].include?(text)
+  assert @response.body.include?(text)
 end
 
 Then /^I should be redirected to CAS$/ do
-  assert((300..399).include?(@response[0]))
-  redirected_to = @response[1]['Location']
+  assert((300..399).include?(@response.status))
+  redirected_to = @response.headers['Location']
   assert !redirected_to.nil?
   assert redirected_to =~ /cas/i
 end
