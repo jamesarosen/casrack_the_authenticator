@@ -12,33 +12,33 @@ module CasrackTheAuthenticator
     end
     
     def call(env)
-      response = @app.call(env)
-      redirect_on_401(env, response)
+      request = Rack::Request.new(env)
+      redirect_on_401(request, @app.call(env))
     end
     
     private
     
-    def redirect_on_401(env, response)
+    def redirect_on_401(request, response)
       if response[0] == 401
-        redirect_to_cas(env)
+        redirect_to_cas(request)
       else
         response
       end
     end
     
-    def redirect_to_cas(env)
-      [ 302, { 'Location' => cas_url(env) }, [] ]
+    def redirect_to_cas(request)
+      [ 302, { 'Location' => cas_url(request) }, [] ]
     end
     
-    def cas_url(env)
+    def cas_url(request)
       url = @options[:cas_server].dup
       url << (url.include?('?') ? '&' : '?')
       url << 'service='
-      url << Rack::Utils.escape(service_url(env))
+      url << Rack::Utils.escape(service_url(request))
     end
     
-    def service_url(env)
-      strip_ticket_param Rack::Request.new(env).url
+    def service_url(request)
+      strip_ticket_param request.url
     end
     
     def strip_ticket_param(url)
