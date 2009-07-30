@@ -5,8 +5,8 @@ Given /^a Rack application exists$/ do
   @app = @underlying_app
 end
 
-Given /^the basic version of Casrack the Authenticator is installed$/ do
-  @app = CasrackTheAuthenticator::Basic.new(@underlying_app, :cas_server => 'http://cas.test/cas')
+Given /^the simple version of Casrack the Authenticator is installed$/ do
+  @app = CasrackTheAuthenticator::Simple.new(@underlying_app, :cas_server => 'http://cas.test/cas')
 end
 
 Given /^the user has not authenticated with CAS$/ do

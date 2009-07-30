@@ -1,12 +1,12 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-class BasicTest < Test::Unit::TestCase
+class SimpleTest < Test::Unit::TestCase
   
-  context 'a Basic authenticator' do
+  context 'a Simple authenticator' do
     
     setup do
       @app = Object.new
-      @authenticator = CasrackTheAuthenticator::Basic.new(@app, {})
+      @authenticator = CasrackTheAuthenticator::Simple.new(@app, {})
     end
     
     context 'when receiving a 200 from below' do

@@ -1,6 +1,6 @@
 module CasrackTheAuthenticator
   
-  class Basic
+  class Simple
     
     def initialize(app, options)
       @app = app

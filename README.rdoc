@@ -18,14 +18,14 @@ proxy-authentication and single-sign-out, or for anything else you desire.
 ==== 2: set up the middleware:
 
   # in your rackup:
-  use CasrackTheAuthenticator::Basic, :cas_server => "http://cas.mycompany.com/cas"
+  use CasrackTheAuthenticator::Simple, :cas_server => "http://cas.mycompany.com/cas"
   # or "config.middleware.use" if you're on Rails
 
 ==== 3: optionally install CasrackTheAuthenticator::RequireCAS if you
    want _every_ request to require CAS authentication:
    
   # in your rackup:
-  use CasrackTheAuthenticator::Basic, :cas_server => ...
+  use CasrackTheAuthenticator::Simple, :cas_server => ...
   use CasrackTheAuthenticator::RequireCAS
   # or "config.middleware.use" if you're on Rails
    

@@ -1,10 +1,10 @@
-Feature: Basic CAS Authentication
+Feature: Simple CAS Authentication
   In order to maintain privacy and accountability while keeping IT costs low
   "Upper Management" wants to use CAS authentication
   
   Background:
     Given a Rack application exists
-    And the basic version of Casrack the Authenticator is installed
+    And the simple version of Casrack the Authenticator is installed
   
   Scenario: not-signed-in user accesses public materical
     Given the user has not authenticated with CAS

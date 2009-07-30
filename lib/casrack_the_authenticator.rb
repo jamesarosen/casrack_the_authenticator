@@ -1,5 +1,5 @@
 module CasrackTheAuthenticator
   
-  autoload :Basic, 'casrack_the_authenticator/basic'
+  autoload :Simple, 'casrack_the_authenticator/simple'
   
 end
