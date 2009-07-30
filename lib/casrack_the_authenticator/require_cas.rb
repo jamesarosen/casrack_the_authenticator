@@ -6,7 +6,7 @@ module CasrackTheAuthenticator
     # users to log in via CAS for _all_ requests, and
     # returns a 401 Unauthorized if they aren't signed in.
     #
-    # @params app the underlying Rack app.
+    # @param app the underlying Rack app.
     def initialize(app)
       @app = app
     end
