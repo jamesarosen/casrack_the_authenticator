@@ -8,16 +8,25 @@ module CasrackTheAuthenticator
   # a 401 response. On successful redirection back from 
   # CAS, puts the username of the CAS user in the session
   # under <tt>:cas_user</tt>.
-  #
-  # See CasrackTheAuthenticator::Configuration for
-  # configuration options.
   class Simple
     
+    # Create a new CAS middleware.
+    # 
+    # @param app the underlying Rack application
+    # @param [Hash] options - see
+    #               CasrackTheAuthenticator::Configuration
+    #               for more information
     def initialize(app, options)
       @app = app
       @configuration = CasrackTheAuthenticator::Configuration.new(options)
     end
     
+    # Processes the CAS user if a "ticket" parameter is passed,
+    # then calls the underlying Rack application; if the result
+    # is a 401, redirects to CAS; otherwise, returns the response
+    # unchanged.
+    #
+    # @return [Array<Integer, Hash, #each>] a Rack response
     def call(env)
       request = Rack::Request.new(env)
       process_return_from_cas(request)

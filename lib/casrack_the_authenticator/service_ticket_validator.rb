@@ -8,6 +8,10 @@ module CasrackTheAuthenticator
     
     # Build a validator from a +configuration+, a
     # +return_to+ URL, and a +ticket+.
+    #
+    # @param [CasrackTheAuthenticator::Configuration] configuration the CAS configuration
+    # @param [String] return_to_url the URL of this CAS client service
+    # @param [String] ticket the service ticket to validate
     def initialize(configuration, return_to_url, ticket)
       @uri = URI.parse(configuration.service_validate_url(return_to_url, ticket))
     end
@@ -15,11 +19,11 @@ module CasrackTheAuthenticator
     # Request validation of the ticket from the CAS server's
     # serviceValidate (CAS 2.0) function.
     #
-    # Returns a username if the response is valid; +nil+ otherwise.
-    #
-    # Raises any connection errors encountered.
-    #
     # Swallows all XML parsing errors (and returns +nil+ in those cases).
+    #
+    # @return [String, nil] a username if the response is valid; +nil+ otherwise.
+    #
+    # @raise any connection errors encountered.
     def user
       parse_user(get_validation_response_body)
     end

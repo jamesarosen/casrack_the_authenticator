@@ -10,31 +10,36 @@ module CasrackTheAuthenticator
     
     DEFAULT_SERVICE_VALIDATE_URL = "%s/serviceValidate"
     
-    # Options:
-    # 
-    # [<tt>:cas_server</tt>] the CAS server root URL; probably something like
-    #                        'http://cas.mycompany.com' or 
-    #                        'http://cas.mycompany.com/cas'; optional
-    # [<tt>:cas_login_url</tt>] the URL to which to redirect to for logins; 
-    #                           optional if <tt>:cas_server</tt> is specified,
-    #                           otherwise requred.
-    # [<tt>:cas_service_validate_url</tt>] the URL to use for validating service tickets; 
-    #                                      optional if <tt>:cas_server</tt> is specified,
-    #                                      otherwise requred.
+    # @param [Hash] params configuration options
+    # @option params [String, nil] :cas_server the CAS server root URL; probably something like
+    #         'http://cas.mycompany.com' or 'http://cas.mycompany.com/cas'; optional.
+    # @option params [String, nil] :cas_login_url (:cas_server + '/login') the URL to which to
+    #         redirect for logins; options if <tt>:cas_server</tt> is specified,
+    #         required otherwise.
+    # @option params [String, nil] :cas_service_validate_url (:cas_server + '/serviceValidate') the
+    #         URL to use for validating service tickets; optional if <tt>:cas_server</tt> is
+    #         specified, requred otherwise.
     def initialize(params)
       parse_params params
     end
     
     # Build a CAS login URL from +service+.
+    #
+    # @param [String] service the service (a.k.a. return-to) URL
     # 
-    # The result will look something like "http://cas.mycompany.com/login?service=..."
+    # @return [String] a URL like
+    # "http://cas.mycompany.com/login?service=..."
     def login_url(service)
       append_service @login_url, service
     end
     
     # Build a service-validation URL from +service+ and +ticket+.
     #
-    # The result will look something like "http://cas.mycompany.com/serviceValidate?service=...&ticket=..."
+    # @param [String] service the service (a.k.a. return-to) URL
+    # @param [String] ticket the ticket to validate
+    #
+    # @return [String] a URL like
+    # "http://cas.mycompany.com/serviceValidate?service=...&ticket=..."
     def service_validate_url(service, ticket)
       url = append_service @service_validate_url, service
       url << '&ticket=' << Rack::Utils.escape(ticket)
@@ -65,6 +70,12 @@ module CasrackTheAuthenticator
       raise ArgumentError.new(IS_NOT_URL_ERROR_MESSAGE % name) unless url.kind_of?(URI::HTTP)
     end
     
+    # Adds +service+ as an URL-escaped parameter to +base+.
+    #
+    # @param [String] base the base URL
+    # @param [String] service the service (a.k.a. return-to) URL.
+    #
+    # @return [String] the new joined URL.
     def append_service(base, service)
       result = base.dup
       result << (result.include?('?') ? '&' : '?')
