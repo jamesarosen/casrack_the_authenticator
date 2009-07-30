@@ -3,6 +3,14 @@ require 'rack/request'
 
 module CasrackTheAuthenticator
   
+  # The most basic CAS client use-case: redirects to CAS
+  # if a middleware or endpoint beneath this one returns
+  # a 401 response. On successful redirection back from 
+  # CAS, puts the username of the CAS user in the session
+  # under <tt>:cas_user</tt>.
+  #
+  # See CasrackTheAuthenticator::Configuration for
+  # configuration options.
   class Simple
     
     def initialize(app, options)

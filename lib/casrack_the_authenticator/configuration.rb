@@ -25,10 +25,16 @@ module CasrackTheAuthenticator
       parse_params params
     end
     
+    # Build a CAS login URL from +service+.
+    # 
+    # The result will look something like "http://cas.mycompany.com/login?service=..."
     def login_url(service)
       append_service @login_url, service
     end
     
+    # Build a service-validation URL from +service+ and +ticket+.
+    #
+    # The result will look something like "http://cas.mycompany.com/serviceValidate?service=...&ticket=..."
     def service_validate_url(service, ticket)
       url = append_service @service_validate_url, service
       url << '&ticket=' << Rack::Utils.escape(ticket)

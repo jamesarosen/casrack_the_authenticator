@@ -6,10 +6,20 @@ module CasrackTheAuthenticator
     
     VALIDATION_REQUEST_HEADERS = { 'Accept' => '*/*' }
     
+    # Build a validator from a +configuration+, a
+    # +return_to+ URL, and a +ticket+.
     def initialize(configuration, return_to_url, ticket)
       @uri = URI.parse(configuration.service_validate_url(return_to_url, ticket))
     end
     
+    # Request validation of the ticket from the CAS server's
+    # serviceValidate (CAS 2.0) function.
+    #
+    # Returns a username if the response is valid; +nil+ otherwise.
+    #
+    # Raises any connection errors encountered.
+    #
+    # Swallows all XML parsing errors (and returns +nil+ in those cases).
     def user
       parse_user(get_validation_response_body)
     end
