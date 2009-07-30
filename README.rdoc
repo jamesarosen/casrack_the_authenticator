@@ -11,15 +11,17 @@ proxy-authentication and single-sign-out, or for anything else you desire.
 
 === How-To
 
-1. [sudo] gem install casrack_the_authenticator
+==== 1: install
 
-1. set up the middleware:
+  [sudo] gem install casrack_the_authenticator
+
+==== 2: set up the middleware:
 
   # in your rackup:
   use CasrackTheAuthenticator::Basic, :cas_server => "http://cas.mycompany.com/cas"
   # or "config.middleware.use" if you're on Rails
 
-1. optionally install CasrackTheAuthenticator::RequireCAS if you
+==== 3: optionally install CasrackTheAuthenticator::RequireCAS if you
    want _every_ request to require CAS authentication:
    
   # in your rackup:
@@ -27,7 +29,7 @@ proxy-authentication and single-sign-out, or for anything else you desire.
   use CasrackTheAuthenticator::RequireCAS
   # or "config.middleware.use" if you're on Rails
    
-1. pull the authenticated CAS username out of the Rack session:
+==== 4: pull the authenticated CAS username out of the Rack session:
 
   # in a Rack app:
   def call(env)
