@@ -28,6 +28,16 @@ When /^I return to "([^\"]*)" with a valid CAS ticket for "([^\"]*)"$/ do |url, 
   When "I make a request to \"#{url}\""
 end
 
+When /^I return to "([^\"]*)" with an invalid CAS ticket$/ do |url|
+  http_request_returns_error
+  url << (url.include?('?') ? '&' : '?') << 'ticket=ST-not-a-valid-ticket'
+  When "I make a request to \"#{url}\""
+end
+
+Then /^the CAS user should be nil$/ do
+  assert_equal nil, session[:cas_user]
+end
+
 Then /^the CAS user should be "([^\"]*)"$/ do |username|
   assert_equal username, session[:cas_user]
 end

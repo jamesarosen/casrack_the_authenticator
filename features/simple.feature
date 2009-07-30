@@ -24,3 +24,8 @@ Feature: Simple CAS Authentication
     Then the CAS user should be "jswanson"
     And the response should be successful
     And the response body should include "Information for jswanson"
+    
+  Scenario: returning from an unsuccessful CAS sign-in
+    Given the underlying Rack application returns [401, {}, "Restricted!"]
+    When I return to "http://myapp.org/bar" with an invalid CAS ticket
+    Then the CAS user should be nil

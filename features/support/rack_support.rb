@@ -64,14 +64,21 @@ EOX
   end
   
   def http_request_returns_valid_cas_user(username)
+    http_request_returns VALID_CAS_USER_XML % username
+  end
+  
+  def http_request_returns_error
+    http_request_returns "this is not a valid CAS service-ticket-validation response!"
+  end
+  
+  def http_request_returns(content)
     server = Object.new
     connection = Object.new
     response = Object.new
-    body = VALID_CAS_USER_XML % username
     Net::HTTP.stubs(:new).returns(server)
     server.stubs(:start).yields(connection)
     connection.stubs(:get).returns(response)
-    response.stubs(:body).returns(body)
+    response.stubs(:body).returns(content)
   end
   
 end
