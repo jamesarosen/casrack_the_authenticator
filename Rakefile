@@ -1,15 +1,22 @@
-require 'yard'
-require 'yard/rake/yardoc_task'
-require 'cucumber'
-require 'cucumber/rake/task'
-require 'rake/testtask'
-
 desc "Default: run all tests, including features"
 task :default => [ 'test', 'features' ] 
 
-Cucumber::Rake::Task.new(:features) do |t|
-  t.cucumber_opts = "features --format pretty"
+# PACKAGING
+
+require 'rake/gempackagetask'
+
+spec = eval File.read('casrack_the_authenticator.gemspec')
+
+Rake::GemPackageTask.new(spec) do |p|
+  p.gem_spec = spec
+  p.need_tar = true
+  p.need_zip = true
 end
+
+# DOCUMENTATION
+
+require 'yard'
+require 'yard/rake/yardoc_task'
 
 desc "Generate RDoc"
 task :doc => ['doc:generate']
@@ -28,6 +35,16 @@ namespace :doc do
     rm_r doc_dir if File.exists?(doc_dir)
   end
   
+end
+
+# TESTING
+
+require 'cucumber'
+require 'cucumber/rake/task'
+require 'rake/testtask'
+
+Cucumber::Rake::Task.new(:features) do |t|
+  t.cucumber_opts = "features --format pretty"
 end
 
 PROJECT_ROOT = File.expand_path(File.dirname(__FILE__))
