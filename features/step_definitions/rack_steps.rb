@@ -28,3 +28,10 @@ end
 Then /^the response body should include "([^\"]*)"$/ do |text|
   assert @response[2].include?(text)
 end
+
+Then /^I should be redirected to CAS$/ do
+  assert((300..399).include?(@response[0]))
+  redirected_to = @response[1]['Location']
+  assert !redirected_to.nil?
+  assert redirected_to =~ /cas/i
+end
