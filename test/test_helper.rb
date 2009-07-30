@@ -1,4 +1,6 @@
+require 'test/unit'
 require 'test/unit/testcase'
+require 'rubygems'
 require 'shoulda'
 gem 'jferris-mocha'
 require 'mocha'
