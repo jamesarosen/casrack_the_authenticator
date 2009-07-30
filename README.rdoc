@@ -20,6 +20,8 @@ proxy-authentication and single-sign-out, or for anything else you desire.
   # in your rackup:
   use CasrackTheAuthenticator::Simple, :cas_server => "http://cas.mycompany.com/cas"
   # or "config.middleware.use" if you're on Rails
+  
+See CasrackTheAuthenticator::Configuration for specifics on that Hash argument.
 
 ==== 3: optionally install CasrackTheAuthenticator::RequireCAS if you
    want _every_ request to require CAS authentication:

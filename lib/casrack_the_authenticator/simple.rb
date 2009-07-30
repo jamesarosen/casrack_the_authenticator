@@ -7,43 +7,51 @@ module CasrackTheAuthenticator
     
     def initialize(app, options)
       @app = app
-      @options = options
-      raise ArgumentError.new(":cas_server is a required option") if options[:cas_server].nil?
+      @configuration = CasrackTheAuthenticator::Configuration.new(options)
     end
     
     def call(env)
       request = Rack::Request.new(env)
+      process_return_from_cas(request)
       redirect_on_401(request, @app.call(env))
     end
     
     private
     
-    def redirect_on_401(request, response)
-      if response[0] == 401
-        redirect_to_cas(request)
-      else
-        response
+    # ticket processing
+    
+      def process_return_from_cas(request)
+        ticket = request.params['ticket']
+        if ticket
+          validator = ServiceTicketValidator.new(@configuration, service_url(request), ticket)
+          request.session[:cas_user] = validator.user
+        end
       end
-    end
     
-    def redirect_to_cas(request)
-      [ 302, { 'Location' => cas_url(request) }, [] ]
-    end
+    # redirection
     
-    def cas_url(request)
-      url = @options[:cas_server].dup
-      url << (url.include?('?') ? '&' : '?')
-      url << 'service='
-      url << Rack::Utils.escape(service_url(request))
-    end
+      def redirect_on_401(request, response)
+        if response[0] == 401
+          redirect_to_cas(request)
+        else
+          response
+        end
+      end
     
-    def service_url(request)
-      strip_ticket_param request.url
-    end
+      def redirect_to_cas(request)
+        service_url = service_url(request)
+        [ 302, { 'Location' => @configuration.login_url(service_url) }, [] ]
+      end
     
-    def strip_ticket_param(url)
-      url.sub(/[\?&]ticket=[^\?&]+/, '')
-    end
+    # utils  
+    
+      def service_url(request)
+        strip_ticket_param request.url
+      end
+    
+      def strip_ticket_param(url)
+        url.sub(/[\?&]ticket=[^\?&]+/, '')
+      end
     
   end
   

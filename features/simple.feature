@@ -17,3 +17,10 @@ Feature: Simple CAS Authentication
     When I make a request to "http://myapp.com/foo?bar=baz"
     Then I should be redirected to CAS
     And CAS should return me to "http://myapp.com/foo?bar=baz"
+    
+  Scenario: returning from a successful CAS sign-in
+    Given the underlying Rack application returns [200, {}, "Information for jswanson"]
+    When I return to "http://myapp.org/bar" with a valid CAS ticket for "jswanson"
+    Then the CAS user should be "jswanson"
+    And the response should be successful
+    And the response body should include "Information for jswanson"

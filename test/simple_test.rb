@@ -16,6 +16,23 @@ class SimpleTest < Test::Unit::TestCase
     end
   end
   
+  def self.should_set_the_cas_user_in_the_session_to(username)
+    should "set the CAS user in the session to #{username || '<nil>'}" do
+      assert_equal username, @session[:cas_user]
+    end
+  end
+  
+  def get(url)
+    env = Rack::MockRequest.env_for(url)
+    if @session
+      env['rack.session'] = @session
+    else
+      @session = Rack::Request.new(env).session
+    end
+    Rack::MockRequest.stubs(:env_for).returns(env)
+    @response = @request.get url
+  end
+  
   def param_from_url(param, url)
     uri = URI.parse(url)
     Rack::Utils.parse_nested_query(uri.query)[param]
@@ -38,7 +55,7 @@ class SimpleTest < Test::Unit::TestCase
       setup do
         @response_from_below = [ 200, {}, 'Success!' ]
         @app.stubs(:call).returns(@response_from_below)
-        @response = @request.get '/'
+        get '/'
       end
       
       should_pass_the_request_on_down
@@ -56,7 +73,7 @@ class SimpleTest < Test::Unit::TestCase
         response = [401, {}, 'Unauthorized!']
         @app.stubs(:call).returns(response)
         @url = "http://foo.bar/baz?yoo=hoo"
-        @response = @request.get @url
+        get @url
       end
       
       should_pass_the_request_on_down
@@ -74,7 +91,7 @@ class SimpleTest < Test::Unit::TestCase
         
         setup do
           @url = "http://foo.bar/baz?ticket=12345"
-          @response = @request.get @url
+          get @url
         end
         
         should 'strip the ticket from the return-to URL' do
@@ -82,6 +99,25 @@ class SimpleTest < Test::Unit::TestCase
           assert_equal nil, param_from_url('ticket', return_to)
         end
         
+      end
+      
+    end
+    
+    context 'when receiving a valid result from CAS' do
+      
+      setup do
+        validator = Object.new
+        validator.stubs(:user).returns 'timmy'
+        CasrackTheAuthenticator::ServiceTicketValidator.stubs(:new).returns(validator)
+        @response_from_below = [ 200, {}, 'Success!' ]
+        @app.stubs(:call).returns(@response_from_below)
+        get '/?ticket=ST-77889'
+      end
+      
+      should_set_the_cas_user_in_the_session_to 'timmy'
+      
+      should 'build a service-ticket validator' do
+        assert_received(CasrackTheAuthenticator::ServiceTicketValidator, :new)
       end
       
     end
