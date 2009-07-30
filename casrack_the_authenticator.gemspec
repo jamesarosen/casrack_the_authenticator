@@ -1,11 +1,11 @@
 Gem::Specification.new do |s|
 
   s.name = "casrack_the_authenticator"
-  s.version = "0.1.0"
+  s.version = "0.1.1"
   s.date = Time.now.strftime('%Y-%m-%d')
   
   s.platform = Gem::Platform::RUBY
-  s.files = Dir.glob("{doc,lib,test,features}/**/*") + ['README.rdoc', 'Rakefile', '.yardoc']
+  s.files = Dir.glob("{doc,lib,test,features}/**/*") + ['README.rdoc', 'Rakefile']
   s.require_paths = ['lib']
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Casrack the Authenticator: RDoc", "--charset", "utf-8"]
 
