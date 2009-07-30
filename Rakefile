@@ -1,4 +1,5 @@
-require 'rake/rdoctask'
+require 'yard'
+require 'yard/rake/yardoc_task'
 require 'cucumber'
 require 'cucumber/rake/task'
 require 'rake/testtask'
@@ -10,10 +11,23 @@ Cucumber::Rake::Task.new(:features) do |t|
   t.cucumber_opts = "features --format pretty"
 end
 
-Rake::RDocTask.new do |rd|
-  rd.main = "README.rdoc"
-  rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
-  rd.rdoc_dir = 'doc/rdoc'
+desc "Generate RDoc"
+task :doc => ['doc:generate']
+
+namespace :doc do
+  
+  doc_dir = './doc/rdoc'
+  
+  YARD::Rake::YardocTask.new(:generate) do |yt|
+    yt.files   = ['lib/**/*.rb', 'README.rdoc']
+    yt.options = ['--output-dir', doc_dir]
+  end
+  
+  desc "Remove generated documenation"
+  task :clean do
+    rm_r doc_dir if File.exists?(doc_dir)
+  end
+  
 end
 
 PROJECT_ROOT = File.expand_path(File.dirname(__FILE__))
