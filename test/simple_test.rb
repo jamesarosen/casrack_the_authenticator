@@ -16,25 +16,36 @@ class SimpleTest < Test::Unit::TestCase
     end
   end
   
+  def param_from_url(param, url)
+    uri = URI.parse(url)
+    Rack::Utils.parse_nested_query(uri.query)[param]
+  end
+  
+  def return_to_url(response)
+    param_from_url 'service', response.headers['Location']
+  end
+  
   context 'a Simple authenticator' do
     
     setup do
       @app = Object.new
       @authenticator = CasrackTheAuthenticator::Simple.new(@app, {:cas_server => 'http://cas.test/'})
+      @request = Rack::MockRequest.new(@authenticator)
     end
     
     context 'when receiving a 200 from below' do
       
       setup do
-        @response_from_below = [ 200, Object.new, Object.new ]
+        @response_from_below = [ 200, {}, 'Success!' ]
         @app.stubs(:call).returns(@response_from_below)
-        @response = @authenticator.call({})
+        @response = @request.get '/'
       end
       
       should_pass_the_request_on_down
 
       should 'do nothing to the response' do
-        assert_equal @response_from_below, @response
+        assert_equal @response_from_below[0], @response.status
+        assert_equal @response_from_below[2], @response.body
       end
       
     end
@@ -44,14 +55,33 @@ class SimpleTest < Test::Unit::TestCase
       setup do
         response = [401, {}, 'Unauthorized!']
         @app.stubs(:call).returns(response)
-        @response = @authenticator.call({})
+        @url = "http://foo.bar/baz?yoo=hoo"
+        @response = @request.get @url
       end
       
       should_pass_the_request_on_down
       
       should 'redirect to CAS' do
-        assert((300..399).include?(@response[0]))
-        assert @response[1]['Location'] =~ /cas/i
+        assert((300..399).include?(@response.status))
+        assert @response.headers['Location'] =~ /cas/i
+      end
+      
+      should 'use the requested URL for the return-to' do
+        assert_equal @url, return_to_url(@response)
+      end
+      
+      context "and the request URL includes a 'ticket' param" do
+        
+        setup do
+          @url = "http://foo.bar/baz?ticket=12345"
+          @response = @request.get @url
+        end
+        
+        should 'strip the ticket from the return-to URL' do
+          return_to = return_to_url(@response)
+          assert_equal nil, param_from_url('ticket', return_to)
+        end
+        
       end
       
     end

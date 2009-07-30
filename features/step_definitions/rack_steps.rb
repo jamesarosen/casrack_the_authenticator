@@ -15,7 +15,11 @@ Given /^the underlying Rack application returns (.+)$/ do |response|
 end
 
 When /^I make a request$/ do
-  @response = Rack::MockRequest.new(@app).get '/'
+  When 'I make a request to "/"'
+end
+
+When /^I make a request to "(.+)"$/ do |path|
+  @response = Rack::MockRequest.new(@app).get path
 end
 
 Then /^the response should be successful$/ do
@@ -31,4 +35,10 @@ Then /^I should be redirected to CAS$/ do
   redirected_to = @response.headers['Location']
   assert !redirected_to.nil?
   assert redirected_to =~ /cas/i
+end
+
+Then /^CAS should return me to "([^\"]*)"$/ do |return_to|
+  redirected_to = URI::parse(@response.headers['Location'])
+  params = Rack::Utils.parse_nested_query(redirected_to.query)
+  assert_equal return_to, params['service']
 end
