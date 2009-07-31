@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 
   s.name = "casrack_the_authenticator"
-  s.version = "1.0.0"
+  s.version = "1.1.0"
   s.date = Time.now.strftime('%Y-%m-%d')
   
   s.platform = Gem::Platform::RUBY

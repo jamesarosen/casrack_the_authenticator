@@ -19,10 +19,10 @@ Given /^the underlying Rack application returns (.+)$/ do |response|
 end
 
 When /^I make a request$/ do
-  When 'I make a request to "/"'
+  get '/'
 end
 
-When /^I make a request to "(.+)"$/ do |url|
+When /^I make a request to "([^\"]*)"$/ do |url|
   get url
 end
 
@@ -47,7 +47,7 @@ Then /^the CAS user should be "([^\"]*)"$/ do |username|
 end
 
 Then /^the response should be successful$/ do
-  assert((200..299).include?(response.status))
+  assert((200..299).include?(response.status), "Expected success, but was #{response.status}")
 end
 
 Then /^the response body should include "([^\"]*)"$/ do |text|

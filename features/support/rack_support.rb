@@ -42,15 +42,14 @@ EOX
     self.underlying_app = self.app = self.session = self.response = nil
   end
   
-  def get(url)
-    env = RackSupport.current_env = Rack::MockRequest.env_for(url)
+  def get(url, headers = {})
+    env = RackSupport.current_env = Rack::MockRequest.env_for(url, headers)
     if session
       env['rack.session'] = session
     else
       self.session = Rack::Request.new(env).session
     end
-    env['fazbot'] = 'weasel!'
-    self.response = Rack::MockRequest.new(app).get url
+    self.response = Rack::MockRequest.new(app).get url, headers
   end
   
   def redirected_to

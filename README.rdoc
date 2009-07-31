@@ -49,3 +49,39 @@ See CasrackTheAuthenticator::Configuration for specifics on that Hash argument.
     username = Rack::Request.new(request.env).session[CasrackTheAuthenticator::USERNAME_PARAM]
     User.find_by_username(username)
   end
+
+=== Disconnected (Fake) Mode
+
+I've often found myself working on a CAS-ified project while away from the office
+and unable to access the CAS server. To support this type of disconnected development,
+just substitute in the CasrackTheAuthenticator::Fake middleware. It acts like
+CasrackTheAuthenticator::Simple, but it uses HTTP Basic authentication against a
+preset list of usernames.
+
+A common pattern for Rails apps is to create a disconnected environment:
+
+==== 1: set up <tt>[rails_root]/config/database.yml</tt>
+
+  development: &DEV
+    adapter: sqlite3
+    database: db/development.sqlite3
+    pool: 5
+    timeout: 5000
+
+  # development mode when disconnected from MITRE
+  disconnected:
+    <<: *DEV
+    
+==== 2: set up <tt>[rails_root]/config/disconnected.rb</tt>:
+
+  load './development.rb'
+  config.middleware.swap 'CasrackTheAuthenticator::Simple', CasrackTheAuthenticator::Fake, 'jimbob', 'sueann'
+  
+==== 3: run in disconnected mode:
+
+  script/server -e disconnected
+  
+==== 4: login as 'jimbob' or 'sueann'
+
+Passwords are ignored.
+  
