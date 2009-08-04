@@ -41,7 +41,7 @@ module CasrackTheAuthenticator
         ticket = request.params['ticket']
         if ticket
           validator = ServiceTicketValidator.new(@configuration, service_url(request), ticket)
-          request.session[:cas_user] = validator.user
+          request.session[CasrackTheAuthenticator::USERNAME_PARAM] = validator.user
         end
       end
     

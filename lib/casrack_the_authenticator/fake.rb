@@ -36,7 +36,7 @@ module CasrackTheAuthenticator
     def process_basic_auth(env)
       auth = Rack::Auth::Basic::Request.new(env)
       if auth.provided? && auth.basic? && @usernames.include?(auth.username)
-        Rack::Request.new(env).session[:cas_user] = auth.username
+        Rack::Request.new(env).session[CasrackTheAuthenticator::USERNAME_PARAM] = auth.username
       end
     end
     

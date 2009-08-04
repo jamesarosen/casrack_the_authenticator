@@ -23,7 +23,7 @@ module CasrackTheAuthenticator
     
     # @return [true, false] whether the user is signed in via CAS.
     def signed_in?(env)
-      !Rack::Request.new(env).session[:cas_user].nil?
+      !Rack::Request.new(env).session[CasrackTheAuthenticator::USERNAME_PARAM].nil?
     end
     
     # @return [Array<Integer, Hash, String>] a 401 Unauthorized Rack response.
