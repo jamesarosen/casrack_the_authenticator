@@ -27,7 +27,7 @@ namespace :doc do
   
   YARD::Rake::YardocTask.new(:generate) do |yt|
     yt.files   = ['lib/**/*.rb', 'README.rdoc']
-    yt.options = ['--output-dir', doc_dir]
+    yt.options = ['--output-dir', doc_dir, '--readme', 'README.rdoc']
   end
   
   desc "Remove generated documenation"
