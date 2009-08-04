@@ -11,6 +11,7 @@ Feature: Required CAS Authentication
   Scenario: not-signed-in user makes a request
     When I make a request
     Then I should be redirected to CAS
+    And the "Content-Type" header should be "text/plain"
     
   Scenario: signed-in-user makes a request
     When I return to "http://myapp.org/bar" with a valid CAS ticket for "tperon"

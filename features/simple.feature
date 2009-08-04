@@ -16,6 +16,7 @@ Feature: Simple CAS Authentication
     Given the underlying Rack application returns [401, {}, "Restricted!"]
     When I make a request to "http://myapp.com/foo?bar=baz"
     Then I should be redirected to CAS
+    And the "Content-Type" header should be "text/plain"
     And CAS should return me to "http://myapp.com/foo?bar=baz"
     
   Scenario: returning from a successful CAS sign-in

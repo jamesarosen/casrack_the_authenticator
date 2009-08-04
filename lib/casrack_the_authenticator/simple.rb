@@ -57,7 +57,14 @@ module CasrackTheAuthenticator
     
       def redirect_to_cas(request)
         service_url = service_url(request)
-        [ 302, { 'Location' => @configuration.login_url(service_url) }, [] ]
+        [ 
+          302,
+          {
+            'Location' => @configuration.login_url(service_url),
+            'Content-Type' => 'text/plain'
+          },
+          ["You are being redirected to CAS for sign-in."]
+        ]
       end
     
     # utils  

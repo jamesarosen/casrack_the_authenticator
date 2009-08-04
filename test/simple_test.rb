@@ -83,6 +83,10 @@ class SimpleTest < Test::Unit::TestCase
         assert @response.headers['Location'] =~ /cas/i
       end
       
+      should 'set the content-type to text/plain' do
+        assert_equal 'text/plain', @response.headers['Content-Type']
+      end
+      
       should 'use the requested URL for the return-to' do
         assert_equal @url, return_to_url(@response)
       end

@@ -63,3 +63,7 @@ end
 Then /^CAS should return me to "([^\"]*)"$/ do |return_to|
   assert_equal return_to, service_url
 end
+
+Then /^the "([^\"]*)" header should be "([^\"]*)"$/ do |header, value|
+  assert_equal value, response.headers[header]
+end

@@ -13,6 +13,17 @@ Rake::GemPackageTask.new(spec) do |p|
   p.need_zip = true
 end
 
+namespace :pkg do
+  
+  pkg_dir = './pkg'
+  
+  desc "clean the pkg/ director"
+  task :clean do
+    rm_r pkg_dir if File.exists?(pkg_dir)
+  end
+  
+end
+
 # DOCUMENTATION
 
 require 'yard'
