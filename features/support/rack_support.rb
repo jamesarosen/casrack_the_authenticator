@@ -18,7 +18,7 @@ end
 module RackSupport
   
   VALID_CAS_USER_XML = <<-EOX
-<cas:serviceResponse>
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
   <cas:authenticationSuccess>
     <cas:user>%s</cas:user>
   </cas:authenticationSuccess>

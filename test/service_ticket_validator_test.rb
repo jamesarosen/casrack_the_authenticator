@@ -55,7 +55,7 @@ class ServiceTicketValidatorTest < Test::Unit::TestCase
       
       setup do
         @body = <<-EOX
-<cas:serviceResponse>
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
   <cas:authenticationSuccess>
     <cas:user>beatrice</cas:user>
   </cas:authenticationSuccess>

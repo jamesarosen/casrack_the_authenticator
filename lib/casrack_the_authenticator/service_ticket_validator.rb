@@ -42,7 +42,8 @@ module CasrackTheAuthenticator
     def parse_user(body)
       begin
         doc = Nokogiri::XML(body)
-        node = doc.xpath('/serviceResponse/authenticationSuccess/user').first
+        node   = doc.xpath('/cas:serviceResponse/cas:authenticationSuccess/cas:user').first
+        node ||= doc.xpath('/serviceResponse/authenticationSuccess/user').first  # try w/o the namespace just in case
         node.nil? ? nil : node.content
       rescue Nokogiri::XML::XPath::SyntaxError
         nil
