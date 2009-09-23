@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{casrack_the_authenticator}
-  s.version = "1.4.0"
+  s.version = "1.6.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Rosen"]
@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
     ".gitignore",
      "README.rdoc",
      "Rakefile",
+     "VERSION",
      "casrack_the_authenticator.gemspec",
      "developer_tasks/doc.rake",
      "developer_tasks/gem.rake",
@@ -60,8 +61,23 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<nokogiri>, ["~> 1.3.2"])
+      s.add_development_dependency(%q<thoughtbot-shoulda>, ["~> 2.10.2"])
+      s.add_development_dependency(%q<jferris-mocha>, ["~> 0.9.7"])
+      s.add_development_dependency(%q<redgreen>, ["~> 1.2.2"])
+      s.add_development_dependency(%q<rack>, ["~> 1.0.0"])
     else
+      s.add_dependency(%q<nokogiri>, ["~> 1.3.2"])
+      s.add_dependency(%q<thoughtbot-shoulda>, ["~> 2.10.2"])
+      s.add_dependency(%q<jferris-mocha>, ["~> 0.9.7"])
+      s.add_dependency(%q<redgreen>, ["~> 1.2.2"])
+      s.add_dependency(%q<rack>, ["~> 1.0.0"])
     end
   else
+    s.add_dependency(%q<nokogiri>, ["~> 1.3.2"])
+    s.add_dependency(%q<thoughtbot-shoulda>, ["~> 2.10.2"])
+    s.add_dependency(%q<jferris-mocha>, ["~> 0.9.7"])
+    s.add_dependency(%q<redgreen>, ["~> 1.2.2"])
+    s.add_dependency(%q<rack>, ["~> 1.0.0"])
   end
 end
