@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
+require 'net/http'
 
 class ServiceTicketValidatorTest < Test::Unit::TestCase
   
