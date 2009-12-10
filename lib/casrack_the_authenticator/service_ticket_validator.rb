@@ -1,4 +1,6 @@
 require 'nokogiri'
+require 'net/http'
+require 'net/https'
 
 module CasrackTheAuthenticator
   
@@ -32,7 +34,9 @@ module CasrackTheAuthenticator
     
     def get_validation_response_body
       result = ''
-      Net::HTTP.new(@uri.host, @uri.port).start do |c|
+      http = Net::HTTP.new(@uri.host, @uri.port)
+      http.use_ssl = @uri.scheme == 'https'
+      http.start do |c|
         response = c.get "#{@uri.path}?#{@uri.query}", VALIDATION_REQUEST_HEADERS
         result = response.body
       end
