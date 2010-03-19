@@ -1,5 +1,6 @@
 require 'rack'
 require 'rack/request'
+require 'pp'
 
 module CasrackTheAuthenticator
   
@@ -38,10 +39,15 @@ module CasrackTheAuthenticator
     # ticket processing
     
       def process_return_from_cas(request)
-        ticket = request.params['ticket']
+        ticket = request.params['ticket'] || request.session[CasrackTheAuthenticator::TICKET_PARAM]
+        pp ticket
         if ticket
           validator = ServiceTicketValidator.new(@configuration, service_url(request), ticket)
           request.session[CasrackTheAuthenticator::USERNAME_PARAM] = validator.user
+          request.session[CasrackTheAuthenticator::TICKET_PARAM] = ticket
+        else
+          # Belt and Braces
+          redirect_to_cas(request)
         end
       end
     

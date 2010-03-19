@@ -1,6 +1,7 @@
 module CasrackTheAuthenticator
   
   USERNAME_PARAM = :cas_user
+  TICKET_PARAM = :cas_ticket
   
   autoload :Simple, 'casrack_the_authenticator/simple'
   autoload :Configuration, 'casrack_the_authenticator/configuration'
